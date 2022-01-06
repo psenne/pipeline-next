@@ -10,7 +10,7 @@ export async function getServerSideProps({ params }) {
     const candidateID = params.id
 
     const { data } = await Get("GETCANDIDATEBYID", { candidateID })
-    if (!data) {
+    if (!data.candidate) {
         return { notFound: true }
     } else {
         return { props: { candidate: data.candidate } }
