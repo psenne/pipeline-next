@@ -8,7 +8,7 @@ import statuses from "@constants/statuses"
 
 export async function getServerSideProps({ query }) {
     const { searchterm, status, page = 1 } = query
-    const candidatesperpage = 1
+    const candidatesperpage = 5
     let candidates = []
     let numcandidates = 0
     const allstatuses = statuses.map((s) => s.name)
