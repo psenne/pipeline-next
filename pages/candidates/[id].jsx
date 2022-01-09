@@ -9,8 +9,8 @@ import FlagMessagePopup from "@components/CommonComponents/FlagMessagePopup"
 export async function getServerSideProps({ params }) {
     const candidateID = params.id
 
-    const { data } = await Get("GETCANDIDATEBYID", { candidateID })
-    if (!data.candidate) {
+    const { data, error } = await Get("GETCANDIDATEBYID", { candidateID })
+    if (!data.candidate || error) {
         return { notFound: true }
     } else {
         return { props: { candidate: data.candidate } }

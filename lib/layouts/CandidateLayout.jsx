@@ -5,9 +5,7 @@ export default function CandidateLayout({ children }) {
     return (
         <div className="view-panel">
             <NavBar active="candidates" />
-            <Container fluid className="candidate-table-row hovered">
-                {children}
-            </Container>
+            <Container fluid>{children}</Container>
         </div>
     )
 }

@@ -1,6 +1,4 @@
 import Link from "next/link"
-import { format, parseISO } from "date-fns"
-import classnames from "classnames"
 import FlagMessagePopup from "@components/CommonComponents/FlagMessagePopup"
 import { Icon, Menu, Button } from "semantic-ui-react"
 
@@ -30,20 +28,20 @@ export default function MiniToolbar({ candidateID, isFlagged, archived }) {
     }
 
     return (
-        <Button.Group attached="top" icon basic widths="10">
+        <Menu attached="top">
             <FlagMessagePopup candidateID={candidateID}>
-                <Button title="Add/edit flag">
+                <Menu.Item as={Button} title="Add/edit flag">
                     <Icon link name="flag" color={isFlagged ? "red" : "grey"} />
-                </Button>
+                </Menu.Item>
             </FlagMessagePopup>
             <Link href={`/candidates/edit/${candidateID}`} passHref>
-                <Button name="edit" title="Edit candidate" className="minitoolbar-edit">
+                <Menu.Item as={Button} name="edit" title="Edit candidate" className="minitoolbar-edit">
                     <Icon link name="edit" />
-                </Button>
+                </Menu.Item>
             </Link>
-            <Button name="archive" className="minitoolbar-archive" title={setArchiveStatusText} onClick={ArchiveCandidate}>
+            <Menu.Item as={Button} name="archive" className="minitoolbar-archive" title={setArchiveStatusText} onClick={ArchiveCandidate}>
                 <Icon link name="archive" />
-            </Button>
-        </Button.Group>
+            </Menu.Item>
+        </Menu>
     )
 }

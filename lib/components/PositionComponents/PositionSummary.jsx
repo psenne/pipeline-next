@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Segment, Header, Label, Icon, Menu, Accordion, Transition } from "semantic-ui-react"
 import classnames from "classnames"
@@ -6,23 +6,24 @@ import { format } from "date-fns"
 import Markdown from "markdown-to-jsx"
 
 function PositionSummary({ position }) {
-    const [submissions, setsubmissions] = useState([])
     const [showdescription, setshowdescription] = useState(false)
-    const key = position.key
+    const key = position.id
 
-    const position_id = position.info.position_id ? `(${position.info.position_id})` : ""
-    const contract = position.info.contract ? `${position.info.contract}: ` : ""
-    const level = position.info.level ? position.info.level : ""
-    const location = position.info.location ? `Location: ${position.info.location}` : ""
-    const created = position.info.added_on ? (
+    const position_id = position.position_id ? `(${position.position_id})` : ""
+    const contract = position.contract?.name
+    const level = position.level ? position.level : ""
+    const location = position.location ? `Location: ${position.location}` : ""
+    const submissions = position.submissions || []
+
+    const created = position.created_at ? (
         <Header color="grey" size="tiny" textAlign="center" attached="bottom">
             <Icon name="wait" />
-            Created on {format(position.info.added_on.toDate(), "MMM d, yyyy")}
+            {`Created on ${format(new Date(position.created_at), "MMM d, yyyy")}`}
         </Header>
     ) : (
         ""
     )
-    const more_info = position.info.description ? (
+    const more_info = position.description ? (
         <Accordion>
             <Accordion.Title
                 onClick={(ev) => {
@@ -35,7 +36,7 @@ function PositionSummary({ position }) {
             </Accordion.Title>
             <Transition visible={showdescription} animation="slide down" duration={250}>
                 <Accordion.Content active={showdescription}>
-                    <Markdown>{position.info.description}</Markdown>
+                    <Markdown>{position.description || ""}</Markdown>
                 </Accordion.Content>
             </Transition>
         </Accordion>
@@ -44,35 +45,38 @@ function PositionSummary({ position }) {
     )
 
     return (
-        <div key={position.key} className={classnames({ "candidate-submitted": submissions.length > 0 }, "candidate-table-row")}>
-            <Menu attached icon className="minitoolbar-inline">
-                <Menu.Item as={Link} title="Edit position" className="minitoolbar-edit" to={`/positions/${key}/edit`} icon="edit"></Menu.Item>
+        <div key={position.id} className={classnames({ "candidate-submitted": submissions.length > 0 })}>
+            <Menu attached icon>
+                <Link href={`/positions/${key}/edit`} passHref>
+                    <Menu.Item as="a" title="Edit position" className="minitoolbar-edit" icon="edit"></Menu.Item>
+                </Link>
             </Menu>
             <Segment attached>
-                <Link href={`/positions/${position.key}`}>
+                <Link href={`/positions/${position.id}`}>
                     <a>
                         <Header>
                             <Header.Content>
-                                {contract} {level} {position.info.title} {position_id}
+                                {contract} {level} {position.title} {position_id}
                             </Header.Content>
                             <Header.Subheader>
                                 <div>{location}</div>
                             </Header.Subheader>
                         </Header>
-                        <p>
-                            <Markdown>{position.info.skill_summary}</Markdown>
-                        </p>
-                        <p>{more_info}</p>
+                        <div>
+                            <Markdown>{position.skill_summary}</Markdown>
+                        </div>
+                        <div>{more_info}</div>
                     </a>
                 </Link>
                 {submissions.length > 0 && (
                     <Header size="small">
                         Candidates submitted:
-                        {submissions.map((candidate) => {
+                        {submissions.map((submission) => {
+                            const candidate = submission.candidate
                             return (
-                                <Link key={candidate.key} href={`/candidates/${candidate.key}`}>
+                                <Link key={candidate.id} href={`/candidates/${candidate.id}`}>
                                     <a>
-                                        <Label color="blue" key={candidate.key} content={candidate.info.candidate_name} icon="user secret" />
+                                        <Label color="blue" key={candidate.id} content={`${candidate.firstname} ${candidate.lastname}`} icon="user secret" />
                                     </a>
                                 </Link>
                             )

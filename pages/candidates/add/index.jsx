@@ -1,8 +1,9 @@
 import { useState } from "react"
 import axios from "axios"
+import CandidateLayout from "@layouts/CandidateLayout"
 import { tmplCandidate } from "@constants/candidateInfo"
 import ContractDropdown from "@components/CommonComponents/ContractDropdown"
-import { Form, Container, Segment, Button, Message, Header, Tab } from "semantic-ui-react"
+import { Form, Segment, Button, Message, Header, Tab } from "semantic-ui-react"
 
 export default function AddCandidate() {
     const [candidate, setcandidate] = useState({ ...tmplCandidate })
@@ -50,7 +51,8 @@ export default function AddCandidate() {
 
     //callback function when form editing is done.
     function updateDB() {
-        axios.post("/api/candidates", candidate)
+        console.log(candidate)
+        // axios.post("/api/candidates", candidate)
     }
 
     // only required fields are first and last name of candidate. If those aren't set return false and show error message
@@ -70,7 +72,6 @@ export default function AddCandidate() {
             render: () => (
                 <Tab.Pane>
                     <Form.TextArea name="notes" onChange={HandleTextInput} value={candidate.notes} />
-                    {/* <Form.TextArea name="next_steps" label="Next Steps" onChange={HandleTextInput} value={candidate.next_steps} /> */}
                 </Tab.Pane>
             ),
         },
@@ -128,3 +129,5 @@ export default function AddCandidate() {
         </>
     )
 }
+
+AddCandidate.Layout = CandidateLayout

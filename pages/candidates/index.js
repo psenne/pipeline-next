@@ -22,7 +22,7 @@ export async function getServerSideProps({ query }) {
                     lastname_contains: searchterm,
                 },
                 {
-                    title_contains: searchterm,
+                    level_contains: searchterm,
                 },
                 {
                     skill_contains: searchterm,
@@ -46,19 +46,23 @@ export async function getServerSideProps({ query }) {
         start: (page - 1) * candidatesperpage,
     }
 
-    const { data } = await Get("GETALLCANDIDATES", queryobj)
+    const { data, error } = await Get("GETALLCANDIDATES", queryobj)
+    if (error) {
+        console.error({ error })
+        return { notFound: true }
+    }
     if (data) {
         candidates = data.candidates
-    }
+        const {
+            data: { candidatesConnection },
+        } = await Get("COUNTFILTEREDCANDIDATES", whereclause)
 
-    const {
-        data: { candidatesConnection },
-    } = await Get("COUNTFILTEREDCANDIDATES", whereclause)
-    if (candidatesConnection) {
-        numcandidates = candidatesConnection?.aggregate?.count
-    }
-    return {
-        props: { candidates, candidatesperpage, page, numcandidates },
+        if (candidatesConnection) {
+            numcandidates = candidatesConnection?.aggregate?.count
+        }
+        return {
+            props: { candidates, candidatesperpage, page, numcandidates },
+        }
     }
 }
 
