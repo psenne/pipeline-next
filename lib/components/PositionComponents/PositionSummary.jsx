@@ -13,7 +13,7 @@ function PositionSummary({ position }) {
     const contract = position.contract?.name
     const level = position.level ? position.level : ""
     const location = position.location ? `Location: ${position.location}` : ""
-    const submissions = position.submissions || []
+    const submissions = position?.submissions
 
     const created = position.created_at ? (
         <Header color="grey" size="tiny" textAlign="center" attached="bottom">
@@ -68,7 +68,7 @@ function PositionSummary({ position }) {
                         <div>{more_info}</div>
                     </a>
                 </Link>
-                {submissions.length > 0 && (
+                {submissions?.length > 0 && (
                     <Header size="small">
                         Candidates submitted:
                         {submissions.map((submission) => {

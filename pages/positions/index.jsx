@@ -68,6 +68,7 @@ function PositionsPage({ positions, positionsperpage, page, numpositions }) {
     const router = useRouter()
     const url = router.pathname
     const queryobj = router.query
+
     return (
         <>
             <PositionsToolbar />
