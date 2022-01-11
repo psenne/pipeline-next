@@ -36,7 +36,7 @@ export default function CandidateDetailPage({ candidate }) {
                             <Icon name="flag" color="red" />
                         </Menu.Item>
                     </FlagMessagePopup>
-                    <Link href={`/candidates/edit/${candidate.id}`}>
+                    <Link href={`/candidates/${candidate.id}/edit`}>
                         <Menu.Item as="a">
                             <Icon name="edit" />
                         </Menu.Item>

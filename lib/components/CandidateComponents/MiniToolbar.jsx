@@ -34,7 +34,7 @@ export default function MiniToolbar({ candidateID, isFlagged, archived }) {
                     <Icon link name="flag" color={isFlagged ? "red" : "grey"} />
                 </Menu.Item>
             </FlagMessagePopup>
-            <Link href={`/candidates/edit/${candidateID}`} passHref>
+            <Link href={`/candidates/${candidateID}/edit`} passHref>
                 <Menu.Item as={Button} name="edit" title="Edit candidate" className="minitoolbar-edit">
                     <Icon link name="edit" />
                 </Menu.Item>

@@ -29,7 +29,7 @@ export default function FlagMessage({ candidateID }) {
                     <Icon name="flag" color="red" />
                     <Message.Content>
                         {active.map((flag) => {
-                            const action = flag.actioned_to.length > 0 ? <Message.Header>Actioned to: {flag.actioned_to.map((mgr) => mgr.name).join(", ")}</Message.Header> : ""
+                            const action = flag.actioned_to.length > 0 ? <Message.Header>Actioned to: {flag.actioned_to.map((mgr) => mgr.username).join(", ")}</Message.Header> : ""
                             return (
                                 <div key={flag.id}>
                                     {action}
