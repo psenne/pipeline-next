@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { Get } from "@modules/requests"
+import Head from "next/head"
 import Link from "next/link"
 import { Menu, Icon } from "semantic-ui-react"
 import CandidateLayout from "@layouts/CandidateLayout"
@@ -26,6 +27,11 @@ export default function CandidateDetailPage({ candidate }) {
 
     return (
         <>
+            <Head>
+                <title>
+                    RenX Portal: {candidate.firstname} {candidate.lastname}
+                </title>
+            </Head>
             <Menu fluid attached="top" size="huge" borderless className="no-print">
                 <Menu.Item onClick={GoBack}>
                     <Icon name="arrow left" />
