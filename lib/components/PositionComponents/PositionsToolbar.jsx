@@ -44,7 +44,7 @@ export default function PositionToolbar() {
                 </Menu.Item>
             </Link>
             <Menu.Item>
-                <ContractDropdown text="Filter by Contract" clearable value={contract} filtered onChange={SetSelectedContract} />
+                <ContractDropdown text="Filter by Contract" clearable value={contract} filtered="by position" onChange={SetSelectedContract} />
             </Menu.Item>
             <Menu.Item className={classnames({ "form-hidden": !contract })}>
                 <label>{`Filtering for ${contract}`}</label>

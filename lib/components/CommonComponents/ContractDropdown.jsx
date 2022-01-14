@@ -1,7 +1,7 @@
 import { getContracts } from "@modules/queryhooks"
 import { Dropdown } from "semantic-ui-react"
 
-export default function ContractDropdown({ onChange, filtered = false, ...rest }) {
+export default function ContractDropdown({ onChange, filtered = null, ...rest }) {
     const { allcontracts } = getContracts()
 
     function handleChange(ev, selection) {
@@ -11,8 +11,10 @@ export default function ContractDropdown({ onChange, filtered = false, ...rest }
     const contractList = allcontracts
         ? allcontracts
               .filter((contract) => {
-                  if (filtered) {
+                  if (filtered == "by position") {
                       return contract.positions.length > 0
+                  } else if (filtered == "by employee") {
+                      return contract.employees.length > 0
                   } else {
                       return contract
                   }

@@ -8,7 +8,6 @@ import { Pagination } from "semantic-ui-react"
 export async function getServerSideProps({ query }) {
     const { searchterm, page = 1, contract } = query
     const positionsperpage = 5
-    let positions = []
     let numpositions = 0
 
     const {
@@ -35,9 +34,10 @@ export async function getServerSideProps({ query }) {
                     level_contains: searchterm,
                 },
             ],
-            contract: { name_in: contract ? allcontracts.filter((c) => c.name === contract) : allcontracts },
+            contract: { name_in: contract ? allcontracts.filter((c) => c === contract) : allcontracts },
         },
     }
+
     const queryobj = {
         ...whereclause,
         limit: positionsperpage,
@@ -50,7 +50,6 @@ export async function getServerSideProps({ query }) {
         return { notFound: true }
     }
     if (data) {
-        positions = data.positions
         const {
             data: { positionsConnection },
         } = await Get("COUNTFILTEREDPOSITIONS", whereclause)
@@ -59,7 +58,7 @@ export async function getServerSideProps({ query }) {
             numpositions = positionsConnection?.aggregate?.count
         }
         return {
-            props: { positions, positionsperpage, page, numpositions },
+            props: { positions: data.positions, positionsperpage, page, numpositions },
         }
     }
 }
