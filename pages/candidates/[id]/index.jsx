@@ -8,9 +8,9 @@ import CandidateProfile from "@components/CandidateComponents/CandidateProfile"
 import FlagMessagePopup from "@components/CommonComponents/FlagMessagePopup"
 
 export async function getServerSideProps({ params }) {
-    const candidateID = params.id
+    const id = params.id
 
-    const { data, error } = await Get("GETCANDIDATEBYID", { candidateID })
+    const { data, error } = await Get("GETCANDIDATEBYID", { id })
     if (!data.candidate || error) {
         return { notFound: true }
     } else {
