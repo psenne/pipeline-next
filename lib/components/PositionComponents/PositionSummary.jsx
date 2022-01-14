@@ -45,7 +45,7 @@ function PositionSummary({ position }) {
     )
 
     return (
-        <div key={position.id} className={classnames({ "candidate-submitted": submissions.length > 0 })}>
+        <Segment.Group key={position.id} className={classnames({ "candidate-submitted": submissions.length > 0 })}>
             <Menu attached icon>
                 <Link href={`/positions/${key}/edit`} passHref>
                     <Menu.Item as="a" title="Edit position" className="minitoolbar-edit" icon="edit"></Menu.Item>
@@ -53,7 +53,7 @@ function PositionSummary({ position }) {
             </Menu>
             <Segment attached>
                 <Link href={`/positions/${position.id}`}>
-                    <a>
+                    <a className="position-link">
                         <Header>
                             <Header.Content>
                                 {contract} {level} {position.title} {position_id}
@@ -63,7 +63,7 @@ function PositionSummary({ position }) {
                             </Header.Subheader>
                         </Header>
                         <div>
-                            <Markdown>{position.skill_summary}</Markdown>
+                            <Markdown>{position.skill_summary || ""}</Markdown>
                         </div>
                         <div>{more_info}</div>
                     </a>
@@ -85,7 +85,7 @@ function PositionSummary({ position }) {
                 )}
             </Segment>
             {created}
-        </div>
+        </Segment.Group>
     )
 }
 

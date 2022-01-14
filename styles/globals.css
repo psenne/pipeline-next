@@ -87,6 +87,10 @@ body {
 .view-panel {
     margin: 1rem;
 }
+.candidate-link,
+.position-link {
+    color: inherit !important;
+}
 .candidate-table-row .archived {
     opacity: 0.5;
 }

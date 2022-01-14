@@ -22,7 +22,7 @@ function CandidateSummary({ candidate }) {
             <MiniToolbar attached="top" candidateID={candidate.id} isFlagged={isFlagged} archived={candidate.archived} />
             <Segment key={candidate.id} attached padded color={status_color && status_color.color}>
                 <Link href={`/candidates/${candidate.id}`}>
-                    <a>
+                    <a className="candidate-link">
                         <Header>
                             <Header.Content>
                                 {candidate.firstname} {candidate.lastname}

@@ -36,7 +36,7 @@ export default function CandidateToolbar() {
     }
 
     return (
-        <Menu className="no-print">
+        <Menu stackable className="no-print">
             <Link href="/candidates/add" passHref>
                 <Menu.Item as="a" title="Add new candidate" link>
                     <Icon name="plus" color="blue" />
