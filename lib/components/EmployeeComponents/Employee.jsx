@@ -4,7 +4,7 @@ import Markdown from "markdown-to-jsx"
 import { format } from "date-fns"
 
 function Employee({ employee }) {
-    const hire_info = employee.hired_on ? "Hired on " + format(employee.hired_on, "M/d/yyyy") : "Hire date not set."
+    const hire_info = employee.hired_on ? "Hired on " + format(new Date(employee.hired_on), "M/d/yyyy") : "Hire date not set."
     const referedby = employee.found_by ? `Referred by ${employee.found_by}` : ""
 
     const panes = [
@@ -12,7 +12,7 @@ function Employee({ employee }) {
             menuItem: { key: "notes", icon: "sticky note outline", content: "Notes" },
             render: () => (
                 <Tab.Pane>
-                    <Markdown>{employee.notes}</Markdown>
+                    <Markdown>{employee.notes || ""}</Markdown>
                 </Tab.Pane>
             ),
         },
@@ -20,7 +20,7 @@ function Employee({ employee }) {
             menuItem: { key: "resume", icon: "file text", content: "Resume Text" },
             render: () => (
                 <Tab.Pane>
-                    <Markdown>{employee.resume_text}</Markdown>
+                    <Markdown>{employee.resume_text || ""}</Markdown>
                 </Tab.Pane>
             ),
         },
