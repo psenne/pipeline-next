@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react"
 import Router from "next/router"
 import NProgress from "nprogress"
 import AppLayout from "@layouts/AppLayout"
@@ -23,15 +24,17 @@ function DefaultLayout({ children }) {
     return <main>{children}</main>
 }
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     const Layout = Component.Layout || DefaultLayout
 
     return (
-        <AppLayout>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
-        </AppLayout>
+        <SessionProvider session={session}>
+            <AppLayout>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </AppLayout>
+        </SessionProvider>
     )
 }
 

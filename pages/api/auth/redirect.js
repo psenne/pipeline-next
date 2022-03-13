@@ -1,4 +1,4 @@
-import * as cookie from "cookie"
+import { serialize } from "cookie"
 
 export default async function handler(req, res) {
     const access_token = req.query.access_token
@@ -7,6 +7,7 @@ export default async function handler(req, res) {
     const respjson = await resp.json()
 
     if (respjson.statusCode > 400) {
+        console.log("unauthorized")
         res.status(respjson.statusCode).json({ resp, respjson })
     } else {
         const user = {
@@ -15,24 +16,18 @@ export default async function handler(req, res) {
             email: respjson.user?.email || "",
         }
 
-        const jwtcookie = cookie.serialize("jwt", respjson.jwt, {
+        const jwtcookie = serialize("jwt", respjson.jwt, {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 7,
             path: "/",
         })
-        const usercookie = cookie.serialize("user", JSON.stringify(user), { httpOnly: true, path: "/" })
+        const usercookie = serialize("user", JSON.stringify(user), { httpOnly: true, path: "/" })
 
-        res.status(200).json(user)
-
-        // return {
-        //     status: 302,
-        //     headers: {
-        //         "set-cookie": [jwtcookie, usercookie],
-        //         location: "/",
-        //     },
-        //     body: {
-        //         user: data.user.email,
-        //     },
-        // }
+        try {
+            res.setHeader("Set-Cookie", [jwtcookie, usercookie])
+            res.redirect("/logout")
+        } catch (err) {
+            console.log(err)
+        }
     }
 }

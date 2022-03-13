@@ -1,15 +1,14 @@
+import { useSession, signOut } from "next-auth/react"
 import { Menu, Image } from "semantic-ui-react"
 import Link from "next/link"
 
-const AppHeader = ({ currentuser }) => {
-    currentuser = currentuser || {
-        photoURL: "https://i.pravatar.cc/64",
-        email: "test@email.com",
-    }
+const AppHeader = () => {
+    const { data: session, status } = useSession()
 
-    function SignOutWithGoogle() {
+    if (status !== "authenticated") {
         return false
     }
+
     return (
         <Menu borderless stackable inverted className="no-print">
             <Menu.Item header>
@@ -21,8 +20,14 @@ const AppHeader = ({ currentuser }) => {
             </Menu.Item>
             <Menu.Menu position="right">
                 <Menu.Item>
-                    <span title="Log off" className="avatar floated-right" onClick={SignOutWithGoogle}>
-                        <Image src={currentuser.photoURL} width="35" height="35" className="cursored" avatar size="mini" verticalAlign="middle" spaced /> {currentuser.email}
+                    <span
+                        title="Log off"
+                        className="avatar floated-right"
+                        onClick={() => {
+                            signOut()
+                        }}
+                    >
+                        <Image src={session.useravatar} width="35" height="35" className="cursored" avatar size="mini" verticalAlign="middle" spaced /> {session.username}
                     </span>
                 </Menu.Item>
             </Menu.Menu>

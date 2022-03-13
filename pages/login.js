@@ -9,7 +9,7 @@ export default function Home() {
             <div className="login-screen">
                 <Image src="/images/RenegadeLogo_transparent.png" width="500px" height="100px" />
                 <Link href={serverurl("/connect/auth0")}>
-                    <Button className="login-button" color="google plus" content="Sign in with Google" icon="google" size="large" labelPosition="left"></Button>
+                    <Button className="login-button" color="blue" content="Sign in" icon="windows" size="large" labelPosition="left"></Button>
                 </Link>
             </div>
         </Container>

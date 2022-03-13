@@ -1,9 +1,21 @@
+import { getSession } from "next-auth/react"
 import { Get } from "@modules/requests"
 import EmployeeLayout from "@layouts/EmployeeLayout"
 import EmployeesTable from "@components/EmployeeComponents/EmployeesTable"
 import EmployeeToolbar from "@components/EmployeeComponents/EmployeeToolbar"
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, query }) {
+    const session = await getSession({ req })
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/api/auth/signin",
+                permanent: false,
+            },
+        }
+    }
+
     const { searchterm, contract } = query
 
     const {

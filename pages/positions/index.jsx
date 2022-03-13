@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { Get } from "@modules/requests"
 import PositionLayout from "@layouts/PositionLayout"
@@ -5,7 +6,18 @@ import PositionsTable from "@components/PositionComponents/PositionsTable"
 import PositionsToolbar from "@components/PositionComponents/PositionsToolbar"
 import { Pagination } from "semantic-ui-react"
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, query }) {
+    const session = await getSession({ req })
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/api/auth/signin",
+                permanent: false,
+            },
+        }
+    }
+
     const { searchterm, page = 1, contract } = query
     const positionsperpage = 5
     let numpositions = 0

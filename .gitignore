@@ -1,7 +1,7 @@
 lib/OLD/
 .next
 .env.local
-
+pages/api/data
 
 ############################
 # OS X

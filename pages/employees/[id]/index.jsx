@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import Link from "next/link"
 import Head from "next/head"
 import { Get } from "@modules/requests"
@@ -5,7 +6,18 @@ import Employee from "@components/EmployeeComponents/Employee"
 import EmployeeLayout from "@layouts/EmployeeLayout"
 import { Menu, Icon } from "semantic-ui-react"
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ req, params }) {
+    const session = await getSession({ req })
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/api/auth/signin",
+                permanent: false,
+            },
+        }
+    }
+
     const id = params.id
 
     const { data, error } = await Get("GETEMPLOYEEBYID", { id })

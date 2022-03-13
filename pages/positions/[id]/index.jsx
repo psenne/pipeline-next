@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { Get } from "@modules/requests"
@@ -6,7 +7,18 @@ import PositionLayout from "@layouts/PositionLayout"
 import { Header, Segment, Menu, Icon } from "semantic-ui-react"
 import Markdown from "markdown-to-jsx"
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ req, params }) {
+    const session = await getSession({ req })
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/api/auth/signin",
+                permanent: false,
+            },
+        }
+    }
+
     const id = params.id
 
     const { data, error } = await Get("GETPOSITIONSBYID", { id })

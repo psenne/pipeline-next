@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { Get } from "@modules/requests"
 import CandidatesTable from "@components/CandidateComponents/CandidatesTable"
@@ -6,7 +7,18 @@ import CandidateToolbar from "@components/CandidateComponents/CandidateToolbar"
 import { Pagination } from "semantic-ui-react"
 import statuses from "@constants/statuses"
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ req, query }) {
+    const session = await getSession({ req })
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/api/auth/signin",
+                permanent: false,
+            },
+        }
+    }
+
     const { searchterm, status, page = 1 } = query
     const candidatesperpage = 5
     let candidates = []
