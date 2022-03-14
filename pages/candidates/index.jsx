@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import { Get } from "@modules/requests"
+import Error from "next/error"
 import CandidatesTable from "@components/CandidateComponents/CandidatesTable"
 import CandidateLayout from "@layouts/CandidateLayout"
 import CandidateToolbar from "@components/CandidateComponents/CandidateToolbar"
@@ -19,6 +20,7 @@ export async function getServerSideProps({ req, query }) {
         }
     }
 
+    const jwt = session.jwt
     const { searchterm, status, page = 1 } = query
     const candidatesperpage = 5
     let candidates = []
@@ -58,16 +60,17 @@ export async function getServerSideProps({ req, query }) {
         start: (page - 1) * candidatesperpage,
     }
 
-    const { data, error } = await Get("GETALLCANDIDATES", queryobj)
+    const { data, error } = await Get("GETALLCANDIDATES", queryobj, jwt)
+
     if (error) {
-        console.error({ error })
+        return { props: { data, error: { status: error.status, message: error.message } } }
+    } else if (!data.candidates) {
         return { notFound: true }
-    }
-    if (data) {
+    } else {
         candidates = data.candidates
         const {
             data: { candidatesConnection },
-        } = await Get("COUNTFILTEREDCANDIDATES", whereclause)
+        } = await Get("COUNTFILTEREDCANDIDATES", whereclause, jwt)
 
         if (candidatesConnection) {
             numcandidates = candidatesConnection?.aggregate?.count
@@ -78,10 +81,16 @@ export async function getServerSideProps({ req, query }) {
     }
 }
 
-export default function CandidatesPage({ candidates, candidatesperpage, page, numcandidates }) {
+export default function CandidatesPage({ candidates = [], candidatesperpage, page, numcandidates, error }) {
     const router = useRouter()
     const url = router.pathname
     const queryobj = router.query
+
+    if (error) {
+        console.log(error)
+        return <Error statusCode={error.status} title={error.message} />
+    }
+
     return (
         <>
             <CandidateToolbar />

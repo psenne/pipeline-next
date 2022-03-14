@@ -14,6 +14,7 @@ import FlagMessage from "@components/CommonComponents/FlagMessage"
 export default function CandidateProfile({ candidate }) {
     const [showResume, setshowResume] = useState(false)
     const rescomments = getCommentsByCandidate(candidate.id)
+    console.log(rescomments)
     const { submissions } = getSubmissionsByCandidate(candidate.id)
 
     const SelectPosition = (position) => {

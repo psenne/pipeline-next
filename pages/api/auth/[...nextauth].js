@@ -54,7 +54,7 @@ export default NextAuth({
             }
         },
     },
-    debug: true,
+    debug: false,
     // pages: {
     //     // signIn: "/login",
     //     // signOut: "/logout",
