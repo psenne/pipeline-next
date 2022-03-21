@@ -1,5 +1,6 @@
 import { getSession } from "next-auth/react"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETCONTRACTNAMES, GETALLEMPLOYEES } from "@modules/queries"
 import EmployeeLayout from "@layouts/EmployeeLayout"
 import EmployeesTable from "@components/EmployeeComponents/EmployeesTable"
 import EmployeeToolbar from "@components/EmployeeComponents/EmployeeToolbar"
@@ -17,11 +18,12 @@ export async function getServerSideProps({ req, query }) {
     }
 
     const { searchterm, contract } = query
+    const jwt = session.jwt || null
 
-    const {
-        data: { contracts },
-    } = await Get("GETCONTRACTNAMES")
-    const allcontracts = contracts.map((c) => c.name)
+    const { data: rescontracts } = await get({ query: GETCONTRACTNAMES, jwt })
+
+    const allcontracts = rescontracts ? rescontracts.contracts.map((c) => c.name) : []
+
     const whereclause = {
         where: {
             _or: [
@@ -45,7 +47,7 @@ export async function getServerSideProps({ req, query }) {
         },
     }
 
-    const { data, error } = await Get("GETALLEMPLOYEES", whereclause)
+    const { data, error } = await get({ query: GETALLEMPLOYEES, variables: whereclause, jwt })
 
     if (error) {
         console.error({ error })

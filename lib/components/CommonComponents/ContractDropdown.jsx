@@ -1,15 +1,20 @@
-import { getContracts } from "@modules/queryhooks"
+import { GETALLCONTRACTS } from "@modules/queries"
+import { useAuthQuery } from "@modules/hooks"
 import { Dropdown } from "semantic-ui-react"
 
 export default function ContractDropdown({ onChange, filtered = null, ...rest }) {
-    const { allcontracts } = getContracts()
+    const { data: allcontracts, loading, error: queryerror } = useAuthQuery(GETALLCONTRACTS)
+
+    if (queryerror) {
+        console.error(queryerror)
+        return <p>[Error loading contracts]</p>
+    }
 
     function handleChange(ev, selection) {
         onChange(selection.value)
     }
-
     const contractList = allcontracts
-        ? allcontracts
+        ? allcontracts.contracts
               .filter((contract) => {
                   if (filtered == "by position") {
                       return contract.positions.length > 0
@@ -24,5 +29,5 @@ export default function ContractDropdown({ onChange, filtered = null, ...rest })
               })
         : []
 
-    return <Dropdown {...rest} selectOnBlur={false} options={contractList} onChange={handleChange} />
+    return <Dropdown loading={loading} {...rest} selectOnBlur={false} options={contractList} onChange={handleChange} />
 }

@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETCONTRACTNAMES, GETALLPOSITIONS, COUNTFILTEREDPOSITIONS } from "@modules/queries"
 import PositionLayout from "@layouts/PositionLayout"
 import PositionsTable from "@components/PositionComponents/PositionsTable"
 import PositionsToolbar from "@components/PositionComponents/PositionsToolbar"
@@ -18,15 +19,15 @@ export async function getServerSideProps({ req, query }) {
         }
     }
 
+    const jwt = session.jwt || null
+
     const { searchterm, page = 1, contract } = query
     const positionsperpage = 5
     let numpositions = 0
 
-    const {
-        data: { contracts },
-    } = await Get("GETCONTRACTNAMES")
+    const { data: rescontracts } = await get({ query: GETCONTRACTNAMES, jwt })
 
-    const allcontracts = contracts.map((c) => c.name)
+    const allcontracts = rescontracts ? rescontracts.contracts.map((c) => c.name) : []
     const whereclause = {
         where: {
             _or: [
@@ -56,7 +57,7 @@ export async function getServerSideProps({ req, query }) {
         start: (page - 1) * positionsperpage,
     }
 
-    const { data, error } = await Get("GETALLPOSITIONS", queryobj)
+    const { data, error } = await get({ query: GETALLPOSITIONS, variables: queryobj, jwt })
     if (error) {
         console.error({ error })
         return { notFound: true }
@@ -64,7 +65,7 @@ export async function getServerSideProps({ req, query }) {
     if (data) {
         const {
             data: { positionsConnection },
-        } = await Get("COUNTFILTEREDPOSITIONS", whereclause)
+        } = await get({ query: COUNTFILTEREDPOSITIONS, variables: whereclause, jwt })
 
         if (positionsConnection) {
             numpositions = positionsConnection?.aggregate?.count

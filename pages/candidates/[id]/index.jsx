@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { getSession } from "next-auth/react"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETCANDIDATEBYID } from "@modules/queries"
 import Head from "next/head"
 import Link from "next/link"
 import Error from "next/error"
@@ -23,7 +24,8 @@ export async function getServerSideProps({ req, params }) {
 
     const jwt = session.jwt
     const id = params.id
-    const { data, error } = await Get("GETCANDIDATEBYID", { id }, jwt)
+    const { data, error } = await get({ query: GETCANDIDATEBYID, variables: { id }, jwt })
+
     if (error) {
         return { props: { data, error: { status: error.status, message: error.message } } }
     } else if (!data?.candidate) {

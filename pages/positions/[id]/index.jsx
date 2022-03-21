@@ -1,7 +1,8 @@
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETPOSITIONSBYID } from "@modules/queries"
 import { format } from "date-fns"
 import PositionLayout from "@layouts/PositionLayout"
 import { Header, Segment, Menu, Icon } from "semantic-ui-react"
@@ -20,8 +21,9 @@ export async function getServerSideProps({ req, params }) {
     }
 
     const id = params.id
+    const jwt = session.jwt || null
 
-    const { data, error } = await Get("GETPOSITIONSBYID", { id })
+    const { data, error } = await get({ query: GETPOSITIONSBYID, variables: { id }, jwt })
     if (!data.position || error) {
         return { notFound: true }
     } else {

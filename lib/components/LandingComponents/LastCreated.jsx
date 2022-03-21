@@ -1,11 +1,13 @@
 import Link from "next/link"
-import { getRecentCandidates } from "@modules/queryhooks"
+import { GETRECENTCANDIDATES } from "@modules/queries"
+import { useAuthQuery } from "@modules/hooks"
 import { Container, List, Icon, Header } from "semantic-ui-react"
 import ComponentPlaceholder from "@components/CommonComponents/ComponentPlaceholder"
 import { format } from "date-fns"
 
 export default function LastCreated() {
-    const { candidates, loading, error } = getRecentCandidates(5)
+    const { data, loading, error } = useAuthQuery(GETRECENTCANDIDATES, { num: 5 })
+
     let content = <ComponentPlaceholder lines="5" />
 
     if (error) {
@@ -13,7 +15,8 @@ export default function LastCreated() {
         content = <p>Error loading candidates.</p>
     }
 
-    if (candidates) {
+    if (data && data.candidates) {
+        const { candidates } = data
         content = (
             <List selection verticalAlign="middle" divided relaxed>
                 {candidates.map((candidate) => {

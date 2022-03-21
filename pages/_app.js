@@ -1,3 +1,5 @@
+import { ApolloProvider } from "@apollo/client"
+import { client } from "@modules/requests"
 import { SessionProvider } from "next-auth/react"
 import Router from "next/router"
 import NProgress from "nprogress"
@@ -26,14 +28,16 @@ function DefaultLayout({ children }) {
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     const Layout = Component.Layout || DefaultLayout
-
+    //const client = ApolloClientCreator()
     return (
         <SessionProvider session={session}>
-            <AppLayout>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </AppLayout>
+            <ApolloProvider client={client}>
+                <AppLayout>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </AppLayout>
+            </ApolloProvider>
         </SessionProvider>
     )
 }

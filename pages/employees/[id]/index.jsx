@@ -1,7 +1,8 @@
 import { getSession } from "next-auth/react"
 import Link from "next/link"
 import Head from "next/head"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETEMPLOYEEBYID } from "@modules/queries"
 import Employee from "@components/EmployeeComponents/Employee"
 import EmployeeLayout from "@layouts/EmployeeLayout"
 import { Menu, Icon } from "semantic-ui-react"
@@ -19,8 +20,9 @@ export async function getServerSideProps({ req, params }) {
     }
 
     const id = params.id
+    const jwt = session.jwt || null
 
-    const { data, error } = await Get("GETEMPLOYEEBYID", { id })
+    const { data, error } = await get({ query: GETEMPLOYEEBYID, variables: { id }, jwt })
     if (error || !data.employee) {
         return { notFound: true }
     }

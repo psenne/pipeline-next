@@ -1,26 +1,24 @@
 import { useState } from "react"
-import { getFlagsByCandidate } from "@modules/queryhooks"
+import { useAuthQuery } from "@modules/hooks"
+import { GETFLAGSBYCANDIDATE } from "@modules/queries"
 import { Icon, Message, Accordion } from "semantic-ui-react"
 import { format } from "date-fns"
 import FlagMessagePopup from "@components/CommonComponents/FlagMessagePopup"
 
 export default function FlagMessage({ candidateID }) {
     const [historyOpen, setHistoryOpen] = useState(false)
-    // const [active, setactive] = useState("")
-    // const [inactive, setinactive] = useState("")
-
-    const { flags } = getFlagsByCandidate(candidateID)
+    const { data } = useAuthQuery(GETFLAGSBYCANDIDATE, { candidateID })
 
     const toggleHistory = (ev) => {
         ev.stopPropagation()
         setHistoryOpen(!historyOpen)
     }
-    if (!flags || flags.length === 0) {
+    if (!data || data?.flags.length === 0) {
         return null
     }
 
-    const active = flags.filter((flag) => flag.active)
-    const inactive = flags.filter((flag) => !flag.active)
+    const active = data.flags.filter((flag) => flag.active)
+    const inactive = data.flags.filter((flag) => !flag.active)
 
     return (
         <div style={{ width: "100%", cursor: "pointer" }} title="Edit flag">

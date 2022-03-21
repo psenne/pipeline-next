@@ -1,11 +1,12 @@
 import Link from "next/link"
-import { getRecentSubmissions } from "@modules/queryhooks"
+import { useAuthQuery } from "@modules/hooks"
+import { GETRECENTSUBMISSIONS } from "@modules/queries"
 import { Container, Header, List, Icon } from "semantic-ui-react"
 import ComponentPlaceholder from "@components/CommonComponents/ComponentPlaceholder"
 import { format } from "date-fns"
 
 const RecentSubmissions = () => {
-    const { submissions, loading, error } = getRecentSubmissions(5)
+    const { data, loading, error } = useAuthQuery(GETRECENTSUBMISSIONS, { num: 5 })
     let content = <ComponentPlaceholder lines="5" />
 
     if (error) {
@@ -13,7 +14,8 @@ const RecentSubmissions = () => {
         content = <p>Error loading candidates.</p>
     }
 
-    if (submissions) {
+    if (data && data.submissions) {
+        const { submissions } = data
         content = (
             <List selection verticalAlign="middle" divided relaxed>
                 {submissions.map((submission) => {

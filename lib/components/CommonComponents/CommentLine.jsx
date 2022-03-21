@@ -7,9 +7,10 @@ import Link from "next/link"
 
 function CommentLine({ comment }) {
     const comment_date = comment.created_at ? formatDistance(new Date(comment.created_at), new Date(), { addSuffix: true }) : ""
+    const avatar = comment.author?.avatar ? <Comment.Avatar src={serverurl(comment.author.avatar.url)} /> : null
     return (
         <Comment>
-            <Comment.Avatar src={serverurl(comment.author.avatar.url) || ""} />
+            {avatar}
             <Comment.Content>
                 <Comment.Author>
                     {comment.author.username}{" "}

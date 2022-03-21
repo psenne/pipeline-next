@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
-import { getActiveFlagByCandidate } from "@modules/queryhooks"
+import { useAuthQuery } from "@modules/hooks"
+import { GETACTIVEFLAGBYCANDIDATE } from "@modules/queries"
 import { Modal, Header, Icon, Button, Form } from "semantic-ui-react"
 import ManagerDropdown from "@components/CommonComponents/ManagerDropdown"
 
 export default function FlagMessagePopup({ candidateID, children }) {
     const [isediting, setediting] = useState(false)
     const [isopen, setOpen] = useState(false)
-    const { activeflags } = getActiveFlagByCandidate(candidateID, isopen)
+    const { data: activeflags } = useAuthQuery(GETACTIVEFLAGBYCANDIDATE, { candidateID, isopen })
     const [flag_note, setflag_note] = useState("")
     const [actioned_to, setactioned_to] = useState([])
 

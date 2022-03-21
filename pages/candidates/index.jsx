@@ -1,6 +1,7 @@
 import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
-import { Get } from "@modules/requests"
+import { get } from "@modules/requests"
+import { GETALLCANDIDATES, COUNTFILTEREDCANDIDATES } from "@modules/queries"
 import Error from "next/error"
 import CandidatesTable from "@components/CandidateComponents/CandidatesTable"
 import CandidateLayout from "@layouts/CandidateLayout"
@@ -19,7 +20,6 @@ export async function getServerSideProps({ req, query }) {
             },
         }
     }
-
     const jwt = session.jwt
     const { searchterm, status, page = 1 } = query
     const candidatesperpage = 5
@@ -60,7 +60,7 @@ export async function getServerSideProps({ req, query }) {
         start: (page - 1) * candidatesperpage,
     }
 
-    const { data, error } = await Get("GETALLCANDIDATES", queryobj, jwt)
+    const { data, error } = await get(GETALLCANDIDATES, queryobj, jwt)
 
     if (error) {
         return { props: { data, error: { status: error.status, message: error.message } } }
@@ -70,7 +70,7 @@ export async function getServerSideProps({ req, query }) {
         candidates = data.candidates
         const {
             data: { candidatesConnection },
-        } = await Get("COUNTFILTEREDCANDIDATES", whereclause, jwt)
+        } = await get(COUNTFILTEREDCANDIDATES, whereclause, jwt)
 
         if (candidatesConnection) {
             numcandidates = candidatesConnection?.aggregate?.count
@@ -87,7 +87,7 @@ export default function CandidatesPage({ candidates = [], candidatesperpage, pag
     const queryobj = router.query
 
     if (error) {
-        console.log(error)
+        console.error(error)
         return <Error statusCode={error.status} title={error.message} />
     }
 

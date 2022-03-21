@@ -1,5 +1,7 @@
 import { useState } from "react"
-import { getCommentsByCandidate, getSubmissionsByCandidate } from "@modules/queryhooks"
+import { useSession } from "next-auth/react"
+import { useAuthQuery } from "@modules/hooks"
+import { GETCOMMENTSBYCANDIDATE, GETSUBMISSIONSBYCANDIDATE } from "@modules/queries"
 import { format, parseISO } from "date-fns"
 import SubmissionModal from "@components/CandidateComponents/SubmissionModal"
 import CommentSection from "@components/CommonComponents/CommentSection"
@@ -13,9 +15,8 @@ import FlagMessage from "@components/CommonComponents/FlagMessage"
 
 export default function CandidateProfile({ candidate }) {
     const [showResume, setshowResume] = useState(false)
-    const rescomments = getCommentsByCandidate(candidate.id)
-    console.log(rescomments)
-    const { submissions } = getSubmissionsByCandidate(candidate.id)
+    const rescomments = useAuthQuery(GETCOMMENTSBYCANDIDATE, { candidateID: candidate.id })
+    const { data: submissions } = useAuthQuery(GETSUBMISSIONSBYCANDIDATE, { candidateID: candidate.id })
 
     const SelectPosition = (position) => {
         console.log(position)

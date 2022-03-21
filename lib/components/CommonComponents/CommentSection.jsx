@@ -3,7 +3,7 @@ import CommentLine from "@components/CommonComponents/CommentLine"
 import ComponentPlaceholder from "@components/CommonComponents/ComponentPlaceholder"
 
 export default function CommentSection({ title, res, children }) {
-    const { comments, loading, error } = res
+    const { data, loading, error } = res
     let content = ""
 
     if (loading) {
@@ -13,7 +13,8 @@ export default function CommentSection({ title, res, children }) {
         console.error(error)
         content = <p>Error loading comments.</p>
     }
-    if (comments) {
+    if (data && data.comments) {
+        const comments = data.comments
         content = comments.length > 0 ? comments.map((comment) => <CommentLine key={comment.id} comment={comment} />) : <p>No comments.</p>
     }
 
