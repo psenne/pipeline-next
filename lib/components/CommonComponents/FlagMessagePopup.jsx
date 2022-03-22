@@ -7,12 +7,17 @@ import ManagerDropdown from "@components/CommonComponents/ManagerDropdown"
 export default function FlagMessagePopup({ candidateID, children }) {
     const [isediting, setediting] = useState(false)
     const [isopen, setOpen] = useState(false)
-    const { data: activeflags } = useAuthQuery(GETACTIVEFLAGBYCANDIDATE, { candidateID, isopen })
+    const { data, loading, error } = useAuthQuery(GETACTIVEFLAGBYCANDIDATE, { candidateID }, !isopen)
     const [flag_note, setflag_note] = useState("")
     const [actioned_to, setactioned_to] = useState([])
-    const { flags } = activeflags
+
+    if (error) {
+        console.error(error)
+        return false
+    }
 
     useEffect(() => {
+        const flags = data?.flags || []
         if (flags && flags.length > 0) {
             setflag_note(flags[0].flag_note)
             setactioned_to(flags[0].actioned_to?.map((m) => m.id))
@@ -20,7 +25,7 @@ export default function FlagMessagePopup({ candidateID, children }) {
             setflag_note("")
             setactioned_to([])
         }
-    }, [flags])
+    }, [data])
 
     function updateText(ev) {
         setflag_note(ev.currentTarget.value)
@@ -62,12 +67,12 @@ export default function FlagMessagePopup({ candidateID, children }) {
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                {!isediting && flags?.length === 0 && (
+                {!isediting && !data && (
                     <Button color="green" onClick={AddNote}>
                         <Icon name="checkmark" /> Add Note
                     </Button>
                 )}
-                {!isediting && flags?.length > 0 && (
+                {!isediting && data && (
                     <Button color="red" onClick={RemoveNote}>
                         <Icon name="delete" /> Remove Note
                     </Button>
