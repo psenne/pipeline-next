@@ -1,6 +1,6 @@
 import { getSession } from "next-auth/react"
-import AddPositionForm from "@components/PositionComponents/AddPositionForm"
-import PositionLayout from "@layouts/PositionLayout"
+import AddEmployeeForm from "@components/EmployeeComponents/AddEmployeeForm"
+import EmployeeLayout from "@layouts/EmployeeLayout"
 
 export async function getServerSideProps({ req }) {
     const session = await getSession({ req })
@@ -18,8 +18,8 @@ export async function getServerSideProps({ req }) {
     }
 }
 
-export default function AddPositionPage() {
-    return <AddPositionForm />
+export default function AddEmployeePage() {
+    return <AddEmployeeForm />
 }
 
-AddPositionPage.Layout = PositionLayout
+AddEmployeePage.Layout = EmployeeLayout

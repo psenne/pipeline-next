@@ -90,9 +90,11 @@ export default function AddCandidateForm() {
                             <Form.Input name="firstname" type="text" required label="First name" placeholder="First name" onChange={HandleTextInput} value={candidate.firstname} />
                             <Form.Input name="lastname" type="text" required label="Last name" placeholder="Last name" onChange={HandleTextInput} value={candidate.lastname} />
                         </Form.Group>
-                        <Form.Input name="emailaddress" type="email" label="Email Address:" icon="mail" iconPosition="left" placeholder="Email Address" onChange={HandleTextInput} value={candidate.emailaddress} />
-                        <Form.Input name="telephone" type="tel" label="Phone Number:" icon="phone" iconPosition="left" placeholder="XXX-XXX-XXXX" onChange={HandleTextInput} value={candidate.telephone} />
-                        <Form.Input name="prefered_location" type="text" label="Prefered work location:" icon="globe" iconPosition="left" placeholder="City / State" onChange={HandleTextInput} value={candidate.prefered_location} />
+                        <Form.Group widths="equal">
+                            <Form.Input name="emailaddress" type="email" label="Email Address:" icon="mail" iconPosition="left" placeholder="Email Address" onChange={HandleTextInput} value={candidate.emailaddress} />
+                            <Form.Input name="telephone" type="tel" label="Phone Number:" icon="phone" iconPosition="left" placeholder="XXX-XXX-XXXX" onChange={HandleTextInput} value={candidate.telephone} />
+                            <Form.Input name="prefered_location" type="text" label="Prefered work location:" icon="globe" iconPosition="left" placeholder="City / State" onChange={HandleTextInput} value={candidate.prefered_location} />
+                        </Form.Group>
                     </Segment>
 
                     <Header>Hiring Information</Header>
@@ -101,11 +103,17 @@ export default function AddCandidateForm() {
                             <Form.Input inline type="text" name="skill" label="Skill / Role:" onChange={HandleTextInput} value={candidate.skill} />{" "}
                             <Form.Input inline type="text" name="current_company" label="with current company" onChange={HandleTextInput} value={candidate.current_company} />
                         </Form.Group>
-                        <Form.Input inline type="text" name="level" label="Level:" onChange={HandleTextInput} value={candidate.level} />
-                        <Form.Input inline type="text" name="current_contract" label="Current contract:" onChange={HandleTextInput} value={candidate.current_contract} />
-                        <Form.Group inline>
-                            <label>Potential contracts: </label>
-                            <ContractDropdown multiple selection onChange={HandlePContractInput} value={candidate.potential_contracts} />
+                        <Form.Group widths="equal">
+                            <Form.Field>
+                                <Form.Input type="text" name="level" label="Level:" onChange={HandleTextInput} value={candidate.level} />
+                            </Form.Field>
+                            <Form.Field>
+                                <Form.Input type="text" name="current_contract" label="Current contract:" onChange={HandleTextInput} value={candidate.current_contract} />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Potential contracts: </label>
+                                <ContractDropdown multiple selection onChange={HandlePContractInput} value={candidate.potential_contracts} />
+                            </Form.Field>
                         </Form.Group>
                         <Form.Group inline>
                             <label>Add document:</label>

@@ -7,17 +7,26 @@ import { format } from "date-fns"
 
 const RecentSubmissions = () => {
     const { data, loading, error } = useAuthQuery(GETRECENTSUBMISSIONS, { num: 5 })
-    let content = <ComponentPlaceholder lines="5" />
+
+    let content = ""
+
+    if (loading) {
+        content = <ComponentPlaceholder lines="5" />
+    }
 
     if (error) {
         console.error(error)
-        content = <p>Error loading candidates.</p>
+        content = <p>[Error loading submissions]</p>
     }
 
-    if (data && data.submissions) {
+    if (!data) {
+        return false
+    }
+
+    if (data.submissions) {
         const { submissions } = data
         content = (
-            <List selection verticalAlign="middle" divided relaxed>
+            <List selection verticalAlign="middle" relaxed>
                 {submissions.map((submission) => {
                     const candidate_name = `${submission.candidate.firstname} ${submission.candidate.lastname}`
                     return (

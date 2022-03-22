@@ -60,7 +60,7 @@ export async function getServerSideProps({ req, query }) {
         start: (page - 1) * candidatesperpage,
     }
 
-    const { data, error } = await get(GETALLCANDIDATES, queryobj, jwt)
+    const { data, error } = await get({ query: GETALLCANDIDATES, variables: queryobj, jwt })
 
     if (error) {
         return { props: { data, error: { status: error.status, message: error.message } } }
@@ -70,7 +70,7 @@ export async function getServerSideProps({ req, query }) {
         candidates = data.candidates
         const {
             data: { candidatesConnection },
-        } = await get(COUNTFILTEREDCANDIDATES, whereclause, jwt)
+        } = await get({ query: COUNTFILTEREDCANDIDATES, variables: whereclause, jwt })
 
         if (candidatesConnection) {
             numcandidates = candidatesConnection?.aggregate?.count

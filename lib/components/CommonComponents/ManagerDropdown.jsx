@@ -1,14 +1,20 @@
 import { Dropdown } from "semantic-ui-react"
-import { getManagers } from "@modules/queryhooks"
+import { useAuthQuery } from "@modules/hooks"
+import { GETMANAGERS } from "@modules/queries"
 
 export default function ManagerDropdown({ onChange, value, ...rest }) {
-    const { managers } = getManagers()
+    const { data, error } = useAuthQuery(GETMANAGERS)
 
-    if (!managers) {
+    if (error) {
+        console.error(error)
+        return "[Error loading managers]"
+    }
+
+    if (!data) {
         return false
     }
 
-    const options = managers.map((manager) => {
+    const options = data.users.map((manager) => {
         return {
             key: manager.id,
             text: manager.username,

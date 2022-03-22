@@ -1,60 +1,57 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { fbPositionsDB } from "../firebase.config";
-import { Container, List } from "semantic-ui-react";
-import ComponentPlaceholder from "./ComponentPlaceholder";
-import { format } from "date-fns";
-import tmplPosition from "../constants/positionInfo";
+import Link from "next/link"
+import { useAuthQuery } from "@modules/hooks"
+import { GETRECENTPOSITIONS } from "@modules/queries"
+import { Container, Header, List, Icon } from "semantic-ui-react"
+import ComponentPlaceholder from "@components/CommonComponents/ComponentPlaceholder"
+import { format } from "date-fns"
 
 const RecentPositions = () => {
-    const [orderedPositions, setorderedPositions] = useState([]);
-    const [pageloading, setpageloading] = useState(false);
+    const { data, loading, error } = useAuthQuery(GETRECENTPOSITIONS, { num: 5 })
 
-    useEffect(() => {
-        setpageloading(true);
-        const getPositions = fbPositionsDB
-            .orderBy("added_on", "desc")
-            .limit(5)
-            .onSnapshot(data => {
-                let tmpitems = [];
-                data.forEach(function (position) {
-                    tmpitems.push({ key: position.id, info: Object.assign({}, tmplPosition, position.data()) });
-                });
-                setorderedPositions(tmpitems);
-                setpageloading(false);
-            });
-        return () => getPositions();
-    }, []);
+    let content = ""
+    if (loading) {
+        content = <ComponentPlaceholder lines="5" />
+    }
+
+    if (error) {
+        console.error(error)
+        content = <p>[Error loading positions]</p>
+    }
+
+    if (!data) {
+        return false
+    }
+
+    if (data?.positions) {
+        const { positions } = data
+        content = (
+            <List selection verticalAlign="middle" relaxed>
+                {positions.map((position) => {
+                    const positioninfo = `${position.contract.name} - ${position.title}`
+                    return (
+                        <List.Item key={position.id}>
+                            <List.Content>
+                                <List.Header>
+                                    <Link href={`/positions/${position.id}`}>{positioninfo}</Link>
+                                </List.Header>
+                                added on {format(new Date(position.created_at), "MMM d, yyyy")}
+                            </List.Content>
+                        </List.Item>
+                    )
+                })}
+            </List>
+        )
+    }
 
     return (
         <Container>
-            <h3>Recently added positions</h3>
-            {pageloading ? (
-                <ComponentPlaceholder lines="6" />
-            ) : (
-                <List selection verticalAlign="middle" divided relaxed>
-                    {orderedPositions.map(({ info, key }) => {
-                        const added_on = info.added_on ? "added on " + format(info.added_on.toDate(), "MMM d, yyyy") : "";
-
-                        return (
-                            <List.Item key={key}>
-                                <List.Content>
-                                    <List.Header>
-                                        <Link to={`/positions/${key}`}>
-                                            {info.contract} - {info.title}
-                                        </Link>
-                                    </List.Header>
-                                    <List.Description>
-                                        {info.skill_summary} {added_on}
-                                    </List.Description>
-                                </List.Content>
-                            </List.Item>
-                        );
-                    })}
-                </List>
-            )}
+            <Header>
+                <Icon name="briefcase" />
+                New Positions
+            </Header>
+            {content}
         </Container>
-    );
-};
+    )
+}
 
-export default RecentPositions;
+export default RecentPositions

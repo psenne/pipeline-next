@@ -18,7 +18,7 @@ export default function LastCreated() {
     if (data && data.candidates) {
         const { candidates } = data
         content = (
-            <List selection verticalAlign="middle" divided relaxed>
+            <List selection verticalAlign="middle" relaxed>
                 {candidates.map((candidate) => {
                     const created_date = candidate.created_at ? format(new Date(candidate.created_at), "MMM d, yyyy") : ""
                     const skill = candidate.skill ? `(${candidate.skill})` : ""

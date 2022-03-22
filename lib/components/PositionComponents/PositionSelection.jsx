@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { getPositionSummaries } from "@modules/queryhooks"
+import { useAuthQuery } from "@modules/hooks"
+import { GETPOSITIONSUMMARIES } from "@modules/queries"
 import LoadingPositionsTable from "@components/PositionComponents/LoadingPositionsTable"
 import { Form, Icon, Card, Divider, Container } from "semantic-ui-react"
 import Markdown from "markdown-to-jsx"
@@ -29,7 +30,7 @@ function isSearched(s) {
 
 export default function PositionSelection({ onSelect }) {
     const [searchterm, setsearchterm] = useState("")
-    const { positions, error, loading } = getPositionSummaries()
+    const { data, error, loading } = useAuthQuery(GETPOSITIONSUMMARIES)
 
     const ClearFilters = () => {
         setsearchterm("")
@@ -43,8 +44,15 @@ export default function PositionSelection({ onSelect }) {
         return <LoadingPositionsTable />
     }
     if (error) {
-        return <div>"There was an error"</div>
+        console.error(error)
+        return "[There was an error]"
     }
+    if (!data) {
+        return false
+    }
+
+    const positions = data.positions || []
+
     return (
         <Container>
             <Form>

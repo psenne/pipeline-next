@@ -10,16 +10,17 @@ export default function FlagMessagePopup({ candidateID, children }) {
     const { data: activeflags } = useAuthQuery(GETACTIVEFLAGBYCANDIDATE, { candidateID, isopen })
     const [flag_note, setflag_note] = useState("")
     const [actioned_to, setactioned_to] = useState([])
+    const { flags } = activeflags
 
     useEffect(() => {
-        if (activeflags && activeflags.length > 0) {
-            setflag_note(activeflags[0].flag_note)
-            setactioned_to(activeflags[0].actioned_to?.map((m) => m.id))
+        if (flags && flags.length > 0) {
+            setflag_note(flags[0].flag_note)
+            setactioned_to(flags[0].actioned_to?.map((m) => m.id))
         } else {
             setflag_note("")
             setactioned_to([])
         }
-    }, [activeflags])
+    }, [flags])
 
     function updateText(ev) {
         setflag_note(ev.currentTarget.value)
@@ -61,12 +62,12 @@ export default function FlagMessagePopup({ candidateID, children }) {
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                {!isediting && activeflags?.length === 0 && (
+                {!isediting && flags?.length === 0 && (
                     <Button color="green" onClick={AddNote}>
                         <Icon name="checkmark" /> Add Note
                     </Button>
                 )}
-                {!isediting && activeflags?.length > 0 && (
+                {!isediting && flags?.length > 0 && (
                     <Button color="red" onClick={RemoveNote}>
                         <Icon name="delete" /> Remove Note
                     </Button>
