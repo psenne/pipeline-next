@@ -42,7 +42,7 @@ function Employee({ employee }) {
                 </Header>
             </Segment>
             <Segment vertical padded>
-                <div>Current contract: {employee.currentcontract.name}</div>
+                <div>Current contract: {employee.contract.name}</div>
                 <div>Salary: {employee.salary}</div>
                 <div>{hire_info}</div>
                 <div>{referedby}</div>

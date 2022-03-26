@@ -45,7 +45,7 @@ export default function EmployeesTable({ employees }) {
                             <Table.Cell width={2}>
                                 {employee.level || ""} {employee.title || ""}
                             </Table.Cell>
-                            <Table.Cell width={3}>{employee.currentcontract.name}</Table.Cell>
+                            <Table.Cell width={3}>{employee.contract.name}</Table.Cell>
                             <Table.Cell width={3}>{employee.telephone || ""}</Table.Cell>
                             <Table.Cell width={3}>{employee.emailaddress || ""}</Table.Cell>
                             <Table.Cell width={1}>

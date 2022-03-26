@@ -43,7 +43,7 @@ export async function getServerSideProps({ req, query }) {
                     notes_contains: searchterm,
                 },
             ],
-            currentcontract: { name_in: contract ? allcontracts.filter((c) => c === contract) : allcontracts },
+            contract: { name_in: contract ? allcontracts.filter((c) => c === contract) : allcontracts },
         },
     }
 

@@ -1,8 +1,7 @@
-import React from "react";
-import { Grid } from "semantic-ui-react";
-import StatsCandidates from "./StatsCandidates";
-import StatsEmployees from "./StatsEmployees";
-import StatsSubmissions from "./StatsSubmissions";
+import { Grid } from "semantic-ui-react"
+import StatsCandidates from "@components/LandingComponents/StatsCandidates"
+import StatsEmployees from "@components/LandingComponents/StatsEmployees"
+import StatsSubmissions from "@components/LandingComponents/StatsSubmissions"
 
 export default function Stats() {
     return (
@@ -17,5 +16,5 @@ export default function Stats() {
                 <StatsSubmissions />
             </Grid.Column>
         </Grid>
-    );
+    )
 }

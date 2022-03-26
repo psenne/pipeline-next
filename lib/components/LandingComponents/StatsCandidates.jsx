@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Statistic } from "semantic-ui-react";
-import { fbCandidatesDB } from "../firebase.config";
-import PieChart from "./PieChart";
+import { Statistic } from "semantic-ui-react"
+import { useAuthQuery } from "@modules/hooks"
+import { GETSTATUSES } from "@modules/queries"
+import StatsPie from "@components/CommonComponents/StatsPie"
+import statuses from "@constants/statuses"
 
 export default function StatsCandidates() {
-    const [numCandidates, setNumCandidates] = useState(0);
-    const [candidateStats, setcandidateStats] = useState({});
+    const { data, loading, error } = useAuthQuery(GETSTATUSES)
 
-    useEffect(() => {
-        const unsub = fbCandidatesDB.where("archived", "==", "current").onSnapshot(docs => {
-            const tmp = {};
-            docs.forEach(doc => {
-                const candidate = doc.data();
-                tmp[candidate.status] = tmp[candidate.status] ? tmp[candidate.status] + 1 : 1;
-            });
-            setNumCandidates(docs.size);
-            setcandidateStats(tmp);
-        });
-        return () => {
-            unsub();
-        };
-    }, []);
+    if (error) {
+        console.error(error)
+        return <p>[Error getting stat]</p>
+    }
 
-    const graphdata = Object.keys(candidateStats).map(status => {
-        return {
-            id: status,
-            label: status,
-            value: candidateStats[status]
-        };
-    });
+    if (!data) {
+        return false
+    }
+
+    const statusStats = data.candidatesConnection.groupBy.status.map((status) => {
+        const color = statuses
+            .filter((s) => {
+                if (s.name === status.key) {
+                    return true
+                }
+            })
+            .map((c) => c.color)
+
+        return { name: status.key, value: status.connection.aggregate.count, color: color[0] }
+    })
+
+    const numCandidates = data.candidatesConnection.aggregate.count
 
     return (
         <>
             <Statistic label="Candidates" value={numCandidates} />
-            <PieChart data={graphdata} />
+            <StatsPie data={statusStats} />
         </>
-    );
+    )
 }

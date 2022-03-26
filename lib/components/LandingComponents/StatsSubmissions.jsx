@@ -1,42 +1,48 @@
-import React, { useState, useEffect } from "react";
-import { Statistic } from "semantic-ui-react";
-import firebase from "../firebase.config";
-import PieChart from "./PieChart";
+import { useAuthQuery } from "@modules/hooks"
+import { GETSUBMISSIONSTATS } from "@modules/queries"
+import StatsPie from "@components/CommonComponents/StatsPie"
+import { Statistic } from "semantic-ui-react"
+import randomColor from "randomcolor"
 
 export default function StatsSubmissions() {
-    const [numSubmissions, setnumSubmissions] = useState(0);
-    const [submissionstats, setsubmissionstats] = useState({});
+    const { data, loading, error } = useAuthQuery(GETSUBMISSIONSTATS)
 
-    useEffect(() => {
-        const unsub = firebase
-            .firestore()
-            .collectionGroup("submitted_candidates")
-            .onSnapshot(docs => {
-                const tmp = {};
-                docs.forEach(doc => {
-                    const submission = doc.data();
-                    tmp[submission.position_contract] = tmp[submission.position_contract] ? tmp[submission.position_contract] + 1 : 1;
-                });
-                setnumSubmissions(docs.size);
-                setsubmissionstats(tmp);
-            });
-        return () => {
-            unsub();
-        };
-    }, []);
+    if (error) {
+        console.error(error)
+        return <p>[Error getting stat]</p>
+    }
 
-    const graphdata = Object.keys(submissionstats).map(contract => {
-        return {
-            id: contract,
-            label: contract,
-            value: submissionstats[contract]
-        };
-    });
+    if (!data) {
+        return false
+    }
+
+    const numSubmissions = data.submissions.length
+
+    const contractTotals = data.submissions.reduce((prev, submission) => {
+        const val = submission.position.contract.name
+        if (val in prev) {
+            prev[val]++
+        } else {
+            prev[val] = 1
+        }
+        return prev
+    }, {})
+
+    const numContracts = Object.keys(contractTotals).length
+    const colors = randomColor({
+        count: numContracts,
+        luminosity: "dark",
+        hue: "random",
+    })
+
+    const stats = Object.keys(contractTotals).map((key, i) => {
+        return { name: key, value: contractTotals[key], color: colors[i] }
+    })
 
     return (
         <>
             <Statistic label="Submissions" value={numSubmissions} />
-            <PieChart data={graphdata} />
+            <StatsPie data={stats} />
         </>
-    );
+    )
 }

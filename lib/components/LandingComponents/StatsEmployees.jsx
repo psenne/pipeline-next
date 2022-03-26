@@ -1,39 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { Statistic } from "semantic-ui-react";
-import { fbEmployeesDB } from "../firebase.config";
-import PieChart from "./PieChart";
+import { useAuthQuery } from "@modules/hooks"
+import { GETEMPLOYEESTATS } from "@modules/queries"
+import StatsPie from "@components/CommonComponents/StatsPie"
+import { Statistic } from "semantic-ui-react"
+import randomColor from "randomcolor"
 
 export default function StatsEmployees() {
-    const [numEmployees, setnumEmployees] = useState(0);
-    const [employeeStats, setemployeeStats] = useState({});
+    const { data, loading, error } = useAuthQuery(GETEMPLOYEESTATS)
 
-    useEffect(() => {
-        const unsub = fbEmployeesDB.onSnapshot(docs => {
-            const tmp = {};
-            docs.forEach(doc => {
-                const employee = doc.data();
-                tmp[employee.current_contract] = tmp[employee.current_contract] ? tmp[employee.current_contract] + 1 : 1;
-            });
-            setnumEmployees(docs.size);
-            setemployeeStats(tmp);
-        });
-        return () => {
-            unsub();
-        };
-    }, []);
+    if (error) {
+        console.error(error)
+        return <p>[Error getting stat]</p>
+    }
 
-    const graphdata = Object.keys(employeeStats).map(contract => {
-        return {
-            id: contract,
-            label: contract,
-            value: employeeStats[contract]
-        };
-    });
+    if (!data) {
+        return false
+    }
+
+    const numEmployees = data.employees.length
+    const contractTotals = data.employees.reduce((prev, employee) => {
+        const val = employee.contract.name
+        if (val in prev) {
+            prev[val]++
+        } else {
+            prev[val] = 1
+        }
+        return prev
+    }, {})
+
+    const numContracts = Object.keys(contractTotals).length
+    const colors = randomColor({
+        count: numContracts,
+        luminosity: "dark",
+        hue: "random",
+    })
+
+    const stats = Object.keys(contractTotals).map((key, i) => {
+        return { name: key, value: contractTotals[key], color: colors[i] }
+    })
 
     return (
         <>
             <Statistic label="Employees" value={numEmployees} />
-            <PieChart data={graphdata} />
+            <StatsPie data={stats} />
         </>
-    );
+    )
 }

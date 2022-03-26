@@ -5,7 +5,7 @@ import RecentPositions from "@components/LandingComponents/RecentPositions"
 import RecentSubmissions from "@components/LandingComponents/RecentSubmissions"
 import AtRiskEmployees from "@components/LandingComponents/AtRiskEmployees"
 import RecentComments from "@components/LandingComponents/RecentComments"
-// import Stats from "@components/LandingComponents/Stats"
+import Stats from "@components/LandingComponents/Stats"
 import { Grid, Menu } from "semantic-ui-react"
 import LandingLayout from "@layouts/LandingLayout"
 
@@ -30,7 +30,7 @@ export default function LandingPage(session) {
     const activeItem = false
     return (
         <>
-            {/* <Stats /> */}
+            <Stats />
             <RecentComments />
             <FlaggedCandidates />
             <Grid stackable columns={2}>
