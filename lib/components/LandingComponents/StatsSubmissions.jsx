@@ -1,7 +1,7 @@
 import { useAuthQuery } from "@modules/hooks"
 import { GETSUBMISSIONSTATS } from "@modules/queries"
 import StatsPie from "@components/CommonComponents/StatsPie"
-import { Statistic } from "semantic-ui-react"
+import { Segment, Statistic } from "semantic-ui-react"
 import randomColor from "randomcolor"
 
 export default function StatsSubmissions() {
@@ -31,18 +31,23 @@ export default function StatsSubmissions() {
     const numContracts = Object.keys(contractTotals).length
     const colors = randomColor({
         count: numContracts,
-        luminosity: "dark",
+        luminosity: "bright",
         hue: "random",
     })
 
     const stats = Object.keys(contractTotals).map((key, i) => {
-        return { name: key, value: contractTotals[key], color: colors[i] }
+        return [key, contractTotals[key]]
     })
+    stats.unshift(["Contract", "Number of submissions"])
+
+    // const stats = Object.keys(contractTotals).map((key, i) => {
+    //     return { name: key, value: contractTotals[key], color: colors[i] }
+    // })
 
     return (
-        <>
+        <Segment>
             <Statistic label="Submissions" value={numSubmissions} />
-            <StatsPie data={stats} />
-        </>
+            <StatsPie data={stats} colors={colors} />
+        </Segment>
     )
 }

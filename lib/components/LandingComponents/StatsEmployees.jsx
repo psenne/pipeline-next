@@ -1,8 +1,9 @@
 import { useAuthQuery } from "@modules/hooks"
 import { GETEMPLOYEESTATS } from "@modules/queries"
 import StatsPie from "@components/CommonComponents/StatsPie"
-import { Statistic } from "semantic-ui-react"
+import { Statistic, Segment } from "semantic-ui-react"
 import randomColor from "randomcolor"
+import { Chart } from "react-google-charts"
 
 export default function StatsEmployees() {
     const { data, loading, error } = useAuthQuery(GETEMPLOYEESTATS)
@@ -28,20 +29,27 @@ export default function StatsEmployees() {
     }, {})
 
     const numContracts = Object.keys(contractTotals).length
+
     const colors = randomColor({
         count: numContracts,
-        luminosity: "dark",
+        luminosity: "bright",
         hue: "random",
     })
 
+    // const stats = Object.keys(contractTotals).map((key, i) => {
+    //     return { name: key, value: contractTotals[key], color: colors[i] }
+    // })
+
     const stats = Object.keys(contractTotals).map((key, i) => {
-        return { name: key, value: contractTotals[key], color: colors[i] }
+        return [key, contractTotals[key]]
     })
 
+    stats.unshift(["Contract", "Number of Employees"])
+
     return (
-        <>
+        <Segment>
             <Statistic label="Employees" value={numEmployees} />
-            <StatsPie data={stats} />
-        </>
+            <StatsPie data={stats} colors={colors} />
+        </Segment>
     )
 }

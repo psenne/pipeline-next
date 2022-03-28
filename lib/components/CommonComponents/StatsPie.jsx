@@ -1,20 +1,17 @@
-import { PieChart, Pie, Legend, Tooltip, Cell, LabelList } from "recharts"
+import { Chart } from "react-google-charts"
 
-const renderColorfulLegendText = (value, entry) => {
-    return <span style={{ color: "black" }}>{value}</span>
-}
+export default function StatsPie({ data, options, colors = [] }) {
+    const defaultoptions = {
+        pieSliceText: "value",
+        legend: {
+            position: "bottom",
+            maxLines: 2,
+        },
+        pieSliceTextStyle: { fontSize: "20", color: "#222222" },
+        pieSliceBorderColor: "#eeeeee",
+        sliceVisibilityThreshold: 0.1,
+        colors,
+    }
 
-export default function StatsPie({ data }) {
-    return (
-        <PieChart width={450} height={350}>
-            <Pie data={data} dataKey="value" nameKey="name">
-                <LabelList position="inside" dataKey="value" />
-                {data.map((entry) => (
-                    <Cell key={entry.name} fill={entry.color} />
-                ))}
-            </Pie>
-            <Legend formatter={renderColorfulLegendText} />
-            <Tooltip />
-        </PieChart>
-    )
+    return <Chart chartType="PieChart" data={data} width="100%" height="400px" options={{ ...options, ...defaultoptions }} />
 }
