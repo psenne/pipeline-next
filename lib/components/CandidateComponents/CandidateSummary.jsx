@@ -20,7 +20,7 @@ function CandidateSummary({ candidate }) {
     return (
         <Segment.Group className={classnames({ archived: candidate.archived === "archived" })}>
             <MiniToolbar attached="top" candidateID={candidate.id} isFlagged={isFlagged} archived={candidate.archived} />
-            <Segment key={candidate.id} attached padded color={status_color && status_color.color}>
+            <Segment key={candidate.id} attached padded color={status_color && status_color.dot}>
                 <Link href={`/candidates/${candidate.id}`}>
                     <a className="candidate-link">
                         <Header>

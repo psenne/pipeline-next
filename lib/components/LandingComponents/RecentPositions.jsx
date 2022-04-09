@@ -27,6 +27,7 @@ const RecentPositions = () => {
         content = (
             <List selection verticalAlign="middle" relaxed>
                 {positions.map((position) => {
+                    const author = position.authored_by ? `by ${position.authored_by.fullname}` : ""
                     const positioninfo = `${position.contract.name} - ${position.title}`
                     return (
                         <List.Item key={position.id}>
@@ -34,7 +35,7 @@ const RecentPositions = () => {
                                 <List.Header>
                                     <Link href={`/positions/${position.id}`}>{positioninfo}</Link>
                                 </List.Header>
-                                added on {format(new Date(position.created_at), "MMM d, yyyy")}
+                                added {author} on {format(new Date(position.created_at), "MMM d, yyyy")}
                             </List.Content>
                         </List.Item>
                     )

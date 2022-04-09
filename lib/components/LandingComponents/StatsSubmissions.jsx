@@ -31,7 +31,7 @@ export default function StatsSubmissions() {
     const numContracts = Object.keys(contractTotals).length
     const colors = randomColor({
         count: numContracts,
-        luminosity: "bright",
+        luminosity: "light",
         hue: "random",
     })
 

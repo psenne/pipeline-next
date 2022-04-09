@@ -25,7 +25,7 @@ export default function ContractDropdown({ onChange, filtered = null, ...rest })
                   }
               })
               .map((contract) => {
-                  return { key: contract.name, text: contract.name, value: contract.name }
+                  return { key: contract.id, text: contract.name, value: contract.id }
               })
         : []
 

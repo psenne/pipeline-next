@@ -5,7 +5,7 @@ import { Container, List, Icon, Header } from "semantic-ui-react"
 import ComponentPlaceholder from "@components/CommonComponents/ComponentPlaceholder"
 import { format } from "date-fns"
 
-export default function LastCreated() {
+export default function RecentCandidates() {
     const { data, loading, error } = useAuthQuery(GETRECENTCANDIDATES, { num: 5 })
 
     let content = <ComponentPlaceholder lines="5" />
@@ -22,7 +22,7 @@ export default function LastCreated() {
                 {candidates.map((candidate) => {
                     const created_date = candidate.created_at ? format(new Date(candidate.created_at), "MMM d, yyyy") : ""
                     const skill = candidate.skill ? `(${candidate.skill})` : ""
-                    const addedmsg = candidate.authored_by ? `Added by ${candidate.authored_by?.username} on ${created_date}` : ""
+                    const addedmsg = candidate.authored_by ? `Added by ${candidate.authored_by?.fullname} on ${created_date}` : ""
 
                     return (
                         <List.Item key={candidate.id}>

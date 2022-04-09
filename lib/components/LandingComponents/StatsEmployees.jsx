@@ -32,7 +32,7 @@ export default function StatsEmployees() {
 
     const colors = randomColor({
         count: numContracts,
-        luminosity: "bright",
+        luminosity: "light",
         hue: "random",
     })
 

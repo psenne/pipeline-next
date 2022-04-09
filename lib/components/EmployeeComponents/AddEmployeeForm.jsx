@@ -1,4 +1,8 @@
 import { useState } from "react"
+import { useSession } from "next-auth/react"
+import { useAuthMutation } from "@modules/hooks"
+import { ADDEMPLOYEE } from "@modules/queries"
+import { useRouter } from "next/router"
 import ContractDropdown from "@components/CommonComponents/ContractDropdown"
 import { Form, Container, Segment, Button, Header, Tab } from "semantic-ui-react"
 import tmplEmployee from "@constants/employee"
@@ -7,9 +11,18 @@ import { subYears } from "date-fns"
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css"
 
 export default function AddEmployeePage() {
-    const [employee, setEmployee] = useState(tmplEmployee)
+    const router = useRouter()
+    const { data: session } = useSession()
+    const [employee, setEmployee] = useState({ authored_by: session?.userid, modified_by: session?.userid, ...tmplEmployee })
     const [files, setFiles] = useState([])
     const [error, seterror] = useState(false)
+
+    const [addemployee] = useAuthMutation(ADDEMPLOYEE, {
+        onCompleted: (data) => {
+            const employee = data?.createEmployee?.employee
+            router.push(`/employees/${employee?.id}`)
+        },
+    })
 
     const HandleInput = (ev) => {
         const name = ev.target.name
@@ -20,7 +33,7 @@ export default function AddEmployeePage() {
     }
 
     const HandleContractInput = (selected_contract) => {
-        setEmployee({ ...employee, ...{ current_contract: selected_contract } })
+        setEmployee({ ...employee, ...{ contract: selected_contract } })
     }
 
     const HandleFileUpload = (ev) => {
@@ -35,11 +48,17 @@ export default function AddEmployeePage() {
     }
 
     const ValidateAndSubmit = () => {
-        if (employee.firstname.length === 0 || employee.lastname.length === 0) {
+        seterror(false)
+        if (employee.contract === "") {
+            alert("Employee must be assigned to a contract")
+        }
+        if (employee.firstname.length === 0 || employee.lastname.length === 0 || employee.contract === "") {
             seterror(true)
         } else {
-            seterror(false)
-            console.log({ employee })
+            const variables = {
+                input: { data: { ...employee } },
+            }
+            addemployee({ variables })
         }
     }
 
@@ -99,9 +118,9 @@ export default function AddEmployeePage() {
                             <Form.Field>
                                 <Form.Input type="text" name="title" label="Title:" onChange={HandleInput} value={employee.title} />
                             </Form.Field>
-                            <Form.Field>
+                            <Form.Field required>
                                 <label>Contract:</label>
-                                <ContractDropdown selection clearable value={employee.current_contract} onChange={HandleContractInput} />
+                                <ContractDropdown selection clearable value={employee.contract} onChange={HandleContractInput} />
                             </Form.Field>
                         </Form.Group>
                         <Form.Group widths="equal">

@@ -25,8 +25,9 @@ export default function StatsCandidates() {
     statuses.forEach((status, i) => {
         slices[i] = { color: status.color }
     })
+
     const options = {
-        slices,
+        slices: slices,
     }
 
     // const statusStats = data.candidatesConnection.groupBy.status.map((status) => {

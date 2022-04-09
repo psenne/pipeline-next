@@ -1,5 +1,5 @@
 import { getSession } from "next-auth/react"
-import LastCreated from "@components/LandingComponents/LastCreated"
+import RecentCandidates from "@components/LandingComponents/RecentCandidates"
 import FlaggedCandidates from "@components/LandingComponents/FlaggedCandidates"
 import RecentPositions from "@components/LandingComponents/RecentPositions"
 import RecentSubmissions from "@components/LandingComponents/RecentSubmissions"
@@ -38,7 +38,7 @@ export default function LandingPage(session) {
                     <Grid stackable columns={2}>
                         <Grid.Row>
                             <Grid.Column>
-                                <LastCreated />
+                                <RecentCandidates />
                             </Grid.Column>
                             <Grid.Column>
                                 <RecentPositions />

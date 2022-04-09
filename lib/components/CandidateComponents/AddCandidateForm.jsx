@@ -1,13 +1,27 @@
 import { useState } from "react"
+import { useSession } from "next-auth/react"
+import { useAuthMutation } from "@modules/hooks"
+import { ADDCANDIDATE } from "@modules/queries"
+import { useRouter } from "next/router"
 import Head from "next/head"
 import { tmplCandidate } from "@constants/candidateInfo"
 import ContractDropdown from "@components/CommonComponents/ContractDropdown"
 import { Form, Segment, Button, Message, Header, Tab } from "semantic-ui-react"
 
 export default function AddCandidateForm() {
-    const [candidate, setcandidate] = useState({ ...tmplCandidate })
+    const router = useRouter()
+    const { data: session } = useSession()
+
+    const [candidate, setcandidate] = useState({ authored_by: session?.userid, modified_by: session?.userid, ...tmplCandidate })
     const [formError, setformError] = useState(false)
     const [files, setfiles] = useState([])
+
+    const [addcandidate] = useAuthMutation(ADDCANDIDATE, {
+        onCompleted: (data) => {
+            const candidate = data?.createCandidate?.candidate
+            router.push(`/candidates/${candidate?.id}`)
+        },
+    })
 
     function HandleTextInput(ev) {
         const name = ev.target.name
@@ -43,8 +57,10 @@ export default function AddCandidateForm() {
 
     //callback function when form editing is done.
     function updateDB() {
-        console.log(candidate)
-        // axios.post("/api/candidates", candidate)
+        const variables = {
+            input: { data: { ...candidate } },
+        }
+        addcandidate({ variables })
     }
 
     // only required fields are first and last name of candidate. If those aren't set return false and show error message
