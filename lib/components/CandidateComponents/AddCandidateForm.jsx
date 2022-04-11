@@ -1,9 +1,9 @@
+import Head from "next/head"
 import { useState } from "react"
 import { useSession } from "next-auth/react"
+import { useRouter } from "next/router"
 import { useAuthMutation } from "@modules/hooks"
 import { ADDCANDIDATE } from "@modules/queries"
-import { useRouter } from "next/router"
-import Head from "next/head"
 import { tmplCandidate } from "@constants/candidateInfo"
 import ContractDropdown from "@components/CommonComponents/ContractDropdown"
 import { Form, Segment, Button, Message, Header, Tab } from "semantic-ui-react"
@@ -12,7 +12,7 @@ export default function AddCandidateForm() {
     const router = useRouter()
     const { data: session } = useSession()
 
-    const [candidate, setcandidate] = useState({ authored_by: session?.userid, modified_by: session?.userid, ...tmplCandidate })
+    const [candidate, setcandidate] = useState({ ...tmplCandidate, authored_by: session?.userid, modified_by: session?.userid })
     const [formError, setformError] = useState(false)
     const [files, setfiles] = useState([])
 
@@ -96,7 +96,7 @@ export default function AddCandidateForm() {
     return (
         <>
             <Head>
-                <title>RenX Portal: Add Candidate</title>
+                <title>Add Candidate - RenX Portal</title>
             </Head>
             <Segment>
                 <Form>
@@ -131,10 +131,14 @@ export default function AddCandidateForm() {
                                 <ContractDropdown multiple selection onChange={HandlePContractInput} value={candidate.potential_contracts} />
                             </Form.Field>
                         </Form.Group>
+                    </Segment>
+                    <Header>Documents</Header>
+                    <Segment>
                         <Form.Group inline>
                             <label>Add document:</label>
                             <Form.Input name="doc_filename" type="file" multiple onChange={HandleFileUpload} />
                         </Form.Group>
+                        {/* <Files deletable id={props.match.params.id} filenames={candidate.filenames} onDelete={DeleteFile} /> */}
                     </Segment>
                     <Header>Notes</Header>
                     <Segment>

@@ -13,7 +13,7 @@ import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css"
 export default function AddEmployeePage() {
     const router = useRouter()
     const { data: session } = useSession()
-    const [employee, setEmployee] = useState({ authored_by: session?.userid, modified_by: session?.userid, ...tmplEmployee })
+    const [employee, setEmployee] = useState({ ...tmplEmployee, authored_by: session?.userid, modified_by: session?.userid })
     const [files, setFiles] = useState([])
     const [error, seterror] = useState(false)
 

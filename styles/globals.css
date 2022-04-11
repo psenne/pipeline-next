@@ -1,20 +1,20 @@
 :root {
-    --active-background: rgb(200, 225, 180);
+    --active-background: #bbdb6f;
     --active-text: rgba(0, 0, 0, 0.9);
 
-    --initial-background: #fff;
+    --initial-background: #cccccc;
     --initial-text: #000;
 
-    --archived-background: rgba(0, 0, 0, 0.05);
+    --archived-background: #999999;
     --archived-text: #444;
 
-    --processing-background: #97ccf8;
+    --processing-background: #51b7df;
     --processing-text: rgba(0, 0, 0, 0.9);
 
-    --interviewed-background: #ffffc6;
+    --interviewed-background: #ffde5a;
     --interviewed-text: rgba(0, 0, 0, 0.9);
 
-    --recruiting-background: #ffc478;
+    --recruiting-background: darkorange;
     --recruiting-text: rgba(0, 0, 0, 0.9);
 
     --renegade-red: rgb(161, 32, 0) !important;

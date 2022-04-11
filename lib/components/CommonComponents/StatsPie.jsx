@@ -9,7 +9,7 @@ export default function StatsPie({ data, options, colors = [] }) {
         },
         pieSliceTextStyle: { fontSize: "20", color: "#222222" },
         pieSliceBorderColor: "#eeeeee",
-        sliceVisibilityThreshold: 0.05,
+        // sliceVisibilityThreshold: 0.05,
         colors,
     }
 

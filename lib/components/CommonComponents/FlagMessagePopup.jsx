@@ -37,10 +37,6 @@ export default function FlagMessagePopup({ candidateID, children }) {
         setediting(true)
     }
 
-    function addFlagMessage(ev, flag_note, currentuser) {
-        return false
-    }
-
     function AddNote(ev) {
         console.log({ flag_note, actioned_to })
         setOpen(false)

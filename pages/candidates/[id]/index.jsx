@@ -37,6 +37,7 @@ export async function getServerSideProps({ req, params }) {
 
 export default function CandidateDetailPage({ candidate, error }) {
     const router = useRouter()
+    console.log(candidate)
 
     const GoBack = () => {
         router.back()
