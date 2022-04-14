@@ -29,7 +29,6 @@ export async function getServerSideProps({ req, params }) {
         return { notFound: true }
     } else {
         const candidate = {
-            ...tmplCandidate,
             ...data.candidate,
             modified_by: userid,
             potential_contracts: data.candidate.potential_contracts.map((c) => c.id),

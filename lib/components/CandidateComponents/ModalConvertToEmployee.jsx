@@ -13,7 +13,7 @@ function ModalConvertToEmployee({ CompleteConversion, candidate, children }) {
     const [title, setTitle] = useState(candidate.skill)
     const [level, setLevel] = useState(candidate.level)
     const [notes, setnotes] = useState(candidate.notes)
-    const [current_contract, setcurrent_contract] = useState("")
+    const [contract, setcontract] = useState("")
 
     const candidatename = `${candidate.firstname} ${candidate.lastname}`
 
@@ -64,7 +64,7 @@ function ModalConvertToEmployee({ CompleteConversion, candidate, children }) {
                             </Form.Field>
                             <Form.Field>
                                 <label>Contract</label>
-                                <ContractDropdown selection clearable value={current_contract} onChange={(value) => setcurrent_contract(value)} />
+                                <ContractDropdown selection clearable value={contract} onChange={(value) => setcontract(value)} />
                             </Form.Field>
                         </Form.Group>
                         <Form.Field>
@@ -74,7 +74,16 @@ function ModalConvertToEmployee({ CompleteConversion, candidate, children }) {
                 </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button content="Confirm" labelPosition="right" icon="checkmark" onClick={() => CompleteConversion({ hired_on, birthday, salary, notes, title, level, current_contract })} positive />
+                <Button
+                    content="Confirm"
+                    labelPosition="right"
+                    icon="checkmark"
+                    onClick={() => {
+                        CompleteConversion({ hired_on, birthday, salary, notes, title, level, contract })
+                        setOpen(false)
+                    }}
+                    positive
+                />
                 <Button color="grey" onClick={() => setOpen(false)}>
                     Cancel
                 </Button>

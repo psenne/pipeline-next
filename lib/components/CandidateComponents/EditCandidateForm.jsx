@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useRouter } from "next/router"
 import { useAuthMutation } from "@modules/hooks"
 import { UPDATECANDIDATE, DELETECANDIDATE, ADDEMPLOYEE } from "@modules/queries"
-import tmplEmployee from "@constants/employee"
 import classnames from "classnames"
 import { sentence } from "to-case"
 import LOIStatusDropdown from "@components/CommonComponents/LOIStatusDropdown"
@@ -21,29 +20,9 @@ export default function EditCandidateForm({ candidateinfo, id }) {
     const [error, setError] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
 
-    const [updatecandidate] = useAuthMutation(UPDATECANDIDATE, {
-        onCompleted: (data) => {
-            router.push(`/candidates/${id}`)
-        },
-        onError: (error) => {
-            alert("That didn't work!")
-            console.error(error)
-        },
-    })
-
-    const [deletecandidate] = useAuthMutation(DELETECANDIDATE, {
-        onCompleted: (data) => {
-            router.push(`/candidates`)
-        },
-    })
-
-    const [addemployee] = useAuthMutation(ADDEMPLOYEE, {
-        onCompleted: (data) => {
-            const employee = data?.createEmployee?.employee
-            DeleteCandidate()
-            router.push(`/employees/${employee?.id}`)
-        },
-    })
+    const [updatecandidate] = useAuthMutation(UPDATECANDIDATE)
+    const [deletecandidate] = useAuthMutation(DELETECANDIDATE)
+    const [addemployee] = useAuthMutation(ADDEMPLOYEE)
 
     const archiveLabel = candidate.archived === "archived" ? "Unarchive Candidate" : "Archive Candidate"
 
@@ -118,15 +97,14 @@ export default function EditCandidateForm({ candidateinfo, id }) {
         }
     }
 
-    function ConvertToEmployee({ hired_on, salary, birthday, notes, level, title, current_contract }) {
+    function ConvertToEmployee({ hired_on, salary, birthday, notes, level, title, contract }) {
         const employee = {
             firstname: candidate.firstname,
             lastname: candidate.lastname,
             emailaddress: candidate.emailaddress,
             telephone: candidate.telephone,
             found_by: candidate.found_by,
-            filenames: candidate.filenames,
-            current_contract,
+            contract,
             hired_on,
             level,
             notes,
@@ -137,9 +115,15 @@ export default function EditCandidateForm({ candidateinfo, id }) {
             resume_text: candidate.resume_text,
         }
         const variables = {
-            input: { data: { ...tmplEmployee, ...employee } },
+            input: { data: { ...employee } },
         }
-        addemployee({ variables })
+        addemployee({
+            variables,
+            onCompleted: (data) => {
+                const employee = data?.createEmployee?.employee
+                DeleteCandidate(`/employees/${employee?.id}`)
+            },
+        })
     }
 
     // only required fields are first and last name of candidate. If those aren't set return false and show error message
@@ -155,7 +139,16 @@ export default function EditCandidateForm({ candidateinfo, id }) {
                     data: candidate,
                 },
             }
-            updatecandidate({ variables })
+            updatecandidate({
+                variables,
+                onCompleted: (data) => {
+                    router.push(`/candidates/${id}`)
+                },
+                onError: (error) => {
+                    alert("That didn't work!")
+                    console.error(error)
+                },
+            })
         } else {
             setError(true)
         }
@@ -175,19 +168,27 @@ export default function EditCandidateForm({ candidateinfo, id }) {
         const deleteConfirmed = window.confirm(confirmationMsg)
 
         if (deleteConfirmed) {
-            DeleteCandidate()
+            DeleteCandidate(`/candidates`)
         }
     }
 
-    function DeleteCandidate() {
-        const variables = {
-            input: {
-                where: {
-                    id: id,
+    function DeleteCandidate(goto) {
+        deletecandidate({
+            variables: {
+                input: {
+                    where: {
+                        id: id,
+                    },
                 },
             },
-        }
-        deletecandidate({ variables })
+            onCompleted: (data) => {
+                router.push(goto)
+            },
+            onError: (error) => {
+                alert("UH OH! An error occured.")
+                console.error(error)
+            },
+        })
     }
 
     const panes = [

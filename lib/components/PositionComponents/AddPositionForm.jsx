@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Head from "next/head"
-import axios from "axios"
 import tmplPosition from "@constants/positionInfo"
 import ContractDropdown from "@components/CommonComponents/ContractDropdown"
 import { Form, Segment, Button, Header, Message } from "semantic-ui-react"

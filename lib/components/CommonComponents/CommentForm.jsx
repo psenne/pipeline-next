@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react"
-import axios from "axios"
 import { Form, Input } from "semantic-ui-react"
 
 export default function CommentForm({ candidateID }) {
@@ -12,7 +11,6 @@ export default function CommentForm({ candidateID }) {
             candidate: candidateID,
         }
         console.log({ comment })
-        // axios.post("/api/comments", comment)
     }
 
     return (
